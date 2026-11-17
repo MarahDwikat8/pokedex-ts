@@ -1,0 +1,12 @@
+// export function commandExit() {
+//   console.log("Closing the Pokedex... Goodbye!");
+//   process.exit(0);
+// }
+
+import { State } from "./state.js";
+
+export async function commandExit(state: State) {
+  console.log("Closing the Pokedex... Goodbye!");
+  state.rl.close();  
+  process.exit(0);
+}

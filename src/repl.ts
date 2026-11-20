@@ -37,7 +37,7 @@ export function startREPL(state:State) {
     try {
       await command.callback(state,...args);
     } catch (error) {
-      console.log(error);
+      console.log((error as Error).message);  
     }
 
     rl.prompt();

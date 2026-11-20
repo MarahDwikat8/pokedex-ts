@@ -60,6 +60,37 @@ export class PokeAPI{
             throw new Error (`Error fetch location ${locationName} : ${(error as Error).message}`)
         }
      }
+     async fetchPokemon (PokemonName:string):Promise<Pokemon>{
+            const url =`${PokeAPI.baseURL}/pokemon/${PokemonName}`;
+            //فحص
+            const cached =this.#cache.get<Pokemon>(url);
+            if(cached!==undefined)
+            {
+                return cached;
+            }
+
+
+        try {
+            //جيب
+            const response =await fetch(url);
+            if (!response.ok){
+                throw Error (`${response.status} ${response.statusText}`);
+
+            }
+            //خزن 
+            const pokemon =(await response.json())as Pokemon;
+            this.#cache.add<Pokemon>(url,pokemon);
+            return pokemon;
+        } catch (error) {
+             throw new Error(
+             `Error fetching pokemon '${PokemonName}': ${(error as Error).message}`,
+              );
+            
+        }
+
+
+
+     }
 }
 
 export type ShallowLocation={
@@ -89,4 +120,23 @@ export type Location ={
     }[]
 
 
+}
+
+export type Pokemon={
+    id :number ,
+    name :string ,
+    base_experience:number,
+    height :number ,
+    is_default:boolean,
+    order :number ,
+    weight:number ,
+    stats: {
+    base_stat: number;
+    effort: number;
+    stat: { name: string; url: string };
+     }[];
+     types: {
+     slot: number;
+     type: { name: string; url: string };
+     }[];
 }
